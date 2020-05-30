@@ -1,22 +1,25 @@
-from os import makedirs, path
+from os import path
 from PIL import Image
-from shutil import rmtree, copyfile
+from shutil import copyfile
 from src.Config import Config
 from src.Constants import IMAGE_FORMAT_JPG, PERCENT_TIERS, FOLDER_NAME_OUTPUT_RESULT, IMAGE_FORMAT_JPEG
 from src.File import File
+from src.AbstractService import AbstractService
 from typing import List, Dict
 import glob
 import logging
 import matplotlib.pyplot as plt
 
 
-class Service:
+class SizeClassifierService(AbstractService):
     def execute(self, configurator: Config):
         """Core
 
         :param Config configurator:
         :return:
         """
+        print(' - IMAGE SIZE CLASSIFIER - ')
+
         if not self.is_valid_config(configurator):
             exit(1)
 
@@ -185,29 +188,3 @@ class Service:
         """
         image = Image.open(image_path)
         image.save(jpg_path, IMAGE_FORMAT_JPEG)
-
-    @staticmethod
-    def create_dir(directory: str):
-        makedirs(directory)
-
-    @staticmethod
-    def delete_dir(directory: str):
-        rmtree(directory)
-
-    @staticmethod
-    def is_valid_config(configurator: Config) -> bool:
-        """Checks if configurator is valid
-
-        :param Config configurator:
-        :return:
-        """
-        if not configurator.path_exist():
-            logging.error("Work Folder '{}' does not exist!".format(configurator.get_work_path()))
-            return False
-
-        if configurator.get_work_count() == 0:
-            logging.error("Work Folder '{}' doesn't have any {} image!".format(configurator.get_work_path(),
-                                                                               configurator.get_work_extension().upper()))
-            return False
-
-        return True

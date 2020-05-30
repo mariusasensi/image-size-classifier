@@ -2,8 +2,38 @@ import sys
 import argparse
 import logging
 from src.Config import Config
-from src.Service import Service
+from src.SizeClassifierService import SizeClassifierService
+from src.NoiseReductionService import NoiseReductionService
 from src.Constants import ACCEPTED_IMAGE_FORMATS, LOGGING_LEVELS
+
+
+def menu(configurator: Config):
+    print(' -- MENU --')
+    print('1 -> Image Size Classifier')
+    print('2 -> Image Noise Reduction Classifier')
+
+    # User interaction.
+    executing = True
+    while executing:
+        selected = -1
+        while not (0 <= selected <= 2):
+            try:
+                selected = int(input('> Enter a option or enter 0 to finish: '))
+            except ValueError:
+                print('Please, enter a NUMBER between 0 and 2')
+
+        if selected == 1:
+            size_classifier_service = SizeClassifierService()
+            size_classifier_service.execute(configurator)
+            executing = False
+        elif selected == 2:
+            noise_reduction_service = NoiseReductionService()
+            noise_reduction_service.execute(configurator)
+            executing = False
+        else:
+            executing = False
+
+    print(' - DONE - ')
 
 
 def main():
@@ -21,10 +51,8 @@ def main():
     logging.basicConfig(level=LOGGING_LEVELS[min(len(LOGGING_LEVELS) - 1, arguments.verbose)],
                         format='[%(levelname)s] %(message)s')
 
-    print(' - IMAGE SIZE CLASSIFIER - ')
-    service = Service()
-    service.execute(Config(arguments.path, arguments.extension, arguments.keep))
-    print(' - DONE - ')
+    configurator = Config(arguments.path, arguments.extension, arguments.keep)
+    menu(configurator)
     exit(0)
 
 
