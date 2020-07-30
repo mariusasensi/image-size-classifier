@@ -24,7 +24,7 @@ class Service:
         print("Found {} {} images.".format(configurator.get_work_count(), configurator.get_work_extension().upper()))
         print("JPG folder: '{}'.".format(configurator.get_jpg_path()))
 
-        if not self.is_already_worked(configurator):
+        if not self.__is_already_working(configurator):
             self.create_dir(path.dirname(configurator.get_jpg_path()))
             iter_max = configurator.get_work_count()
             counter = 1
@@ -68,7 +68,7 @@ class Service:
             print("Folder '{}' hasn't been deleted because it has been decided to keep it for future runs.".format(
                 configurator.get_jpg_path()))
 
-    def is_already_worked(self, configuration: Config) -> bool:
+    def __is_already_working(self, configuration: Config) -> bool:
         """Checks if the process already runs in this work directory.
 
         :param Config configuration:
